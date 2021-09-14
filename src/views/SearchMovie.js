@@ -46,8 +46,8 @@ export default function Searcbar() {
           placeholder="Search movie"
         />
       </form>
-      <Route path="movies?query/:batman">
-        <p>Ololo</p>
+      <Route path="movies?query/:moviesName">
+        <MovieList array={searchedMovie} />
       </Route>
     </>
   );
