@@ -1,24 +1,26 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useRouteMatch, Route } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useRouteMatch,
+  Route,
+  useHistory,
+} from "react-router-dom";
 import moviesApi from "../services";
 import MovieCast from "../components/MovieCast/MovieCast";
 import MovieReview from "../components/MovieReview/MovieReview";
-
+import s from "./MovieCard.module.css";
 function MovieCard() {
   const [movieInfo, setMovieInfo] = useState({});
-  const [error, setError] = useState("");
   const { movieId } = useParams();
   const { url } = useRouteMatch();
-  console.log(url);
+  const prevlink = useHistory();
 
   useEffect(() => {
-    moviesApi
-      .fatchMovieInfo(movieId)
-      .then((info) => {
-        setMovieInfo(info);
-      })
-      .catch((error) => setError(error));
-  }, []);
+    moviesApi.fatchMovieInfo(movieId).then((info) => {
+      setMovieInfo(info);
+    });
+  }, [movieId]);
 
   const {
     poster_path,
@@ -31,12 +33,18 @@ function MovieCard() {
   } = movieInfo;
   return (
     <div>
-      <Link to="/">Go back</Link>
-      <div>
-        <img
-          src={`https://image.tmdb.org/t/p/original${poster_path}`}
-          alt={`${original_title} poster`}
-        ></img>
+      <button onClick={prevlink.goBack} className={s.link}>
+        GOBACK
+      </button>
+      <div className={s.cardContainer}>
+        {poster_path ? (
+          <img
+            src={`https://image.tmdb.org/t/p/original${poster_path}`}
+            alt={`${original_title} poster`}
+            className={s.poster}
+          ></img>
+        ) : null}
+
         <div>
           <h1>{title}</h1>
           <div>
@@ -62,9 +70,13 @@ function MovieCard() {
           <p>About</p>
           <p>{overview}</p>
         </div>
-        <Link to={`${url}/cast`}>Cast</Link>
-        <Link to={`${url}/review`}>Review</Link>
       </div>
+      <Link to={`${url}/cast`} className={s.link}>
+        Cast
+      </Link>
+      <Link to={`${url}/review`} className={s.link}>
+        Review
+      </Link>
       <Route path="/movies/:movieId/cast">
         <MovieCast />
       </Route>
