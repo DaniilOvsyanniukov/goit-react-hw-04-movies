@@ -13,7 +13,6 @@ function MovieCast() {
     });
   }, [movieId]);
 
-  console.log(cast);
   return (
     <ul className={s.cast}>
       {cast.map((actor) => {

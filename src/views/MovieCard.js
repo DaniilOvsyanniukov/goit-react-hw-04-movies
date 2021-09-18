@@ -15,12 +15,15 @@ function MovieCard() {
   const { movieId } = useParams();
   const { url } = useRouteMatch();
   const prevlink = useHistory();
+  const { state } = prevlink.location;
+  const location = `${state.referrer}${state.search}`;
 
   useEffect(() => {
     moviesApi.fatchMovieInfo(movieId).then((info) => {
       setMovieInfo(info);
     });
   }, [movieId]);
+  console.log(location);
 
   const {
     poster_path,
@@ -33,9 +36,9 @@ function MovieCard() {
   } = movieInfo;
   return (
     <div>
-      <button onClick={prevlink.goBack} className={s.link}>
+      <Link to={location} className={s.link}>
         GOBACK
-      </button>
+      </Link>
       <div className={s.cardContainer}>
         {poster_path ? (
           <img
@@ -71,10 +74,28 @@ function MovieCard() {
           <p>{overview}</p>
         </div>
       </div>
-      <Link to={`${url}/cast`} className={s.link}>
+      <Link
+        to={{
+          pathname: `${url}/cast`,
+          state: {
+            referrer: state.referrer,
+            search: state.search,
+          }, // или `/products/${slug}`
+        }}
+        className={s.link}
+      >
         Cast
       </Link>
-      <Link to={`${url}/review`} className={s.link}>
+      <Link
+        to={{
+          pathname: `${url}/review`,
+          state: {
+            referrer: state.referrer,
+            search: state.search,
+          }, // или `/products/${slug}`
+        }}
+        className={s.link}
+      >
         Review
       </Link>
       <Route path="/movies/:movieId/cast">
